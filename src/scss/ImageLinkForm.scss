@@ -1,0 +1,45 @@
+.image-link__container {
+    margin-top: 1.5rem;
+
+    h1 {
+        text-align: center;
+    }
+
+    .form__container {
+        display: flex;
+        justify-content: center;
+        flex-direction: row;
+
+        .image__input {
+            width: 83%;
+            padding: 0.30rem;
+        }
+
+        .form__wrapper {
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 0.7rem;
+            padding: 1rem;
+            width: 43.75rem;
+        }
+
+        button {
+            width: 13%;
+            background-color: rgb(91, 77, 153);
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            color: rgb(255, 255, 255);
+            padding: 0.425rem;
+        }
+
+        button:hover {
+            transform: scale(1.02);
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+    }
+
+
+}
