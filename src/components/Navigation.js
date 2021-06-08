@@ -1,10 +1,10 @@
 import React from "react";
 import "../scss/Navigation.scss";
 
-const Navigation = () => {
+const Navigation = ({ onSignOut }) => {
   return (
     <div className="nav__container">
-      <p>Sign Out</p>
+      <p onClick={() => onSignOut("signIn")}>Sign Out</p>
     </div>
   );
 };
