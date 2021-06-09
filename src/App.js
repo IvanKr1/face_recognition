@@ -55,12 +55,6 @@ class App extends Component {
       right: width - face.right_col * width,
       bottom: height - face.bottom_row * height,
     };
-
-    // let box = data.outputs[0].data.regions;
-
-    // for (const data of box) {
-    //   console.log(`data`, data);
-    // }
   };
 
   updateFaceBox = (box) => {
@@ -99,7 +93,7 @@ class App extends Component {
     return (
       <div className="App">
         <Particles className="particles" params={option} />
-        <Navigation onSignOut={this.onRouteChange} />
+        <Navigation onSignOut={this.onRouteChange} signedIn={route} />
         <Header />
         {route === "home" ? (
           <React.Fragment>
