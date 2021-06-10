@@ -7,7 +7,7 @@ const Navigation = ({ onSignOut, signedIn }) => {
       {signedIn !== "home" ? (
         <p onClick={() => onSignOut("signIn")}>Sign In</p>
       ) : (
-        <p onClick={() => onSignOut("signout")}>Sign Out</p>
+        <p onClick={() => onSignOut("signIn")}>Sign Out</p>
       )}
       <p onClick={() => onSignOut("register")}>Register</p>
     </div>
