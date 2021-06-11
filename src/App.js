@@ -34,6 +34,13 @@ class App extends Component {
       imgUrl: "",
       box: {},
       route: "signIn",
+      user: {
+        id: "",
+        name: "",
+        email: "",
+        entries: 0,
+        joined: "",
+      },
     };
   }
 
@@ -72,9 +79,27 @@ class App extends Component {
 
     app.models
       .predict(Clarifai.FACE_DETECT_MODEL, input)
-      .then((response) =>
-        this.updateFaceBox(this.calculateFaceLocation(response))
-      )
+      .then((response) => {
+        if (response) {
+          fetch("http://localhost:5000/image", {
+            method: "put",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              id: this.state.user.id,
+            }),
+          })
+            .then((res) => res.json())
+            .then((count) => {
+              this.setState({
+                user: {
+                  ...this.state.user,
+                  entries: count,
+                },
+              });
+            });
+        }
+        this.updateFaceBox(this.calculateFaceLocation(response));
+      })
       .catch((err) => console.log(`err`, err));
 
     this.setState({
@@ -88,8 +113,22 @@ class App extends Component {
     });
   };
 
+  loadUser = (data) => {
+    console.log(`data`, data);
+    this.setState({
+      user: {
+        id: data.id,
+        name: data.name,
+        email: data.email,
+        entries: data.entries,
+        joined: data.joined,
+      },
+    });
+  };
+
   render() {
-    const { input, box, imgUrl, route } = this.state;
+    const { input, box, imgUrl, route, user } = this.state;
+    console.log(`user`, user);
     return (
       <div className="App">
         <Particles className="particles" params={option} />
@@ -97,7 +136,7 @@ class App extends Component {
         <Header />
         {route === "home" ? (
           <React.Fragment>
-            <FaceDetection />
+            <FaceDetection currentUser={user} />
             <ImageLinkForm
               onChange={this.onChange}
               onSubmitImage={this.onSubmitImage}
@@ -106,9 +145,12 @@ class App extends Component {
             <FaceRecognitionBox box={box} imgUrl={imgUrl} />
           </React.Fragment>
         ) : route === "signIn" ? (
-          <SignIn onRouteChange={this.onRouteChange} />
+          <SignIn onRouteChange={this.onRouteChange} loadUser={this.loadUser} />
         ) : (
-          <Register onRouteChange={this.onRouteChange} />
+          <Register
+            onRouteChange={this.onRouteChange}
+            loadUser={this.loadUser}
+          />
         )}
       </div>
     );

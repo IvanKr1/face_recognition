@@ -5,11 +5,13 @@ const Navigation = ({ onSignOut, signedIn }) => {
   return (
     <div className="nav__container">
       {signedIn !== "home" ? (
-        <p onClick={() => onSignOut("signIn")}>Sign In</p>
+        <React.Fragment>
+          <p onClick={() => onSignOut("signIn")}>Sign In</p>
+          <p onClick={() => onSignOut("register")}>Register</p>
+        </React.Fragment>
       ) : (
         <p onClick={() => onSignOut("signIn")}>Sign Out</p>
       )}
-      <p onClick={() => onSignOut("register")}>Register</p>
     </div>
   );
 };

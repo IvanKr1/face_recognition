@@ -52,14 +52,15 @@ class Register extends React.Component {
       method: "post",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        email: this.state.signInEmail,
+        email: this.state.registerEmail,
         password: this.state.registerPassword,
         name: this.state.registerName,
       }),
     })
       .then((res) => res.json())
-      .then((data) => {
-        if (data === "success") {
+      .then((user) => {
+        if (user) {
+          this.props.loadUser(user);
           this.props.onRouteChange("home");
         }
       });

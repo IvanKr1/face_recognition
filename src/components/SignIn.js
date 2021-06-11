@@ -12,7 +12,6 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import "../scss/SignIn.scss";
-import { CloudUpload } from "@material-ui/icons";
 
 function Copyright() {
   return (
@@ -56,8 +55,9 @@ class SignIn extends React.Component {
       }),
     })
       .then((res) => res.json())
-      .then((data) => {
-        if (data === "success") {
+      .then((user) => {
+        if (user.id) {
+          this.props.loadUser(user);
           this.props.onRouteChange("home");
         }
       });
