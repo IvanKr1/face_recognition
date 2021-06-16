@@ -51,17 +51,29 @@ class App extends Component {
   };
 
   calculateFaceLocation = (data) => {
-    const face = data.outputs[0].data.regions[0].region_info.bounding_box;
+    let arrOfFaces = [];
+
+    for (const facesObj of data.outputs[0].data.regions) {
+      arrOfFaces.push(facesObj.region_info.bounding_box);
+    }
+
     const image = document.getElementById("inputImage");
     const width = Number(image.width);
     const height = Number(image.height);
 
-    return {
-      left: face.left_col * width,
-      top: face.top_row * height + 25,
-      right: width - face.right_col * width,
-      bottom: height - face.bottom_row * height,
-    };
+    let faces = [];
+
+    for (const position of arrOfFaces) {
+      faces.push({
+        left: position.left_col * width,
+        top: position.top_row * height + 25,
+        right: width - position.right_col * width,
+        bottom: height - position.bottom_row * height,
+      });
+    }
+
+    return faces;
+
   };
 
   updateFaceBox = (box) => {
@@ -85,7 +97,8 @@ class App extends Component {
             method: "put",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              id: this.state.user.id,
+              email: this.state.user.email,
+              faces: response.outputs[0].data.regions.length
             }),
           })
             .then((res) => res.json())
@@ -93,7 +106,7 @@ class App extends Component {
               this.setState({
                 user: {
                   ...this.state.user,
-                  entries: count,
+                  entries: count.entries,
                 },
               });
             });
@@ -108,13 +121,18 @@ class App extends Component {
   };
 
   onRouteChange = (route) => {
+    if (route === "signIn") {
+      this.setState({
+        imgUrl: "",
+      });
+    }
+
     this.setState({
       route,
     });
   };
 
   loadUser = (data) => {
-    console.log(`data`, data);
     this.setState({
       user: {
         id: data.id,
@@ -128,7 +146,6 @@ class App extends Component {
 
   render() {
     const { input, box, imgUrl, route, user } = this.state;
-    console.log(`user`, user);
     return (
       <div className="App">
         <Particles className="particles" params={option} />

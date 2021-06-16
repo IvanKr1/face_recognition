@@ -35,7 +35,6 @@ class SignIn extends React.Component {
   }
 
   onEmailChange = (e) => {
-    console.log(`e`, e.target.value);
     this.setState({ signInEmail: e.target.value });
   };
 
