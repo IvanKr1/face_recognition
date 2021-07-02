@@ -15,7 +15,12 @@ import "../scss/SignIn.scss";
 
 function Copyright() {
   return (
-    <Typography variant="body2" color="textSecondary" align="center">
+    <Typography
+      variant="body2"
+      color="textSecondary"
+      align="center"
+      style={{ marginBottom: "2rem" }}
+    >
       {"Copyright © "}
       <Link color="inherit" href="https://github.com/IvanKr1">
         Github
@@ -31,6 +36,8 @@ class SignIn extends React.Component {
     this.state = {
       signInEmail: "",
       signInPassword: "",
+      error: false,
+      inputType: "password",
     };
   }
 
@@ -43,14 +50,15 @@ class SignIn extends React.Component {
   };
 
   onSubmitSignIn = (e) => {
+    const { signInEmail, signInPassword } = this.state;
     e.preventDefault();
 
     fetch("http://localhost:5000/signin", {
       method: "post",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        email: this.state.signInEmail,
-        password: this.state.signInPassword,
+        email: signInEmail,
+        password: signInPassword,
       }),
     })
       .then((res) => res.json())
@@ -58,12 +66,33 @@ class SignIn extends React.Component {
         if (user.id) {
           this.props.loadUser(user);
           this.props.onRouteChange("home");
+        } else {
+          this.setState({
+            error: true,
+          });
+
+          setTimeout(() => {
+            this.setState({ error: false });
+          }, 3000);
         }
       });
   };
 
+  showPassword = (checked) => {
+    if (checked) {
+      this.setState({
+        inputType: "text",
+      });
+    } else {
+      this.setState({
+        inputType: "password",
+      });
+    }
+  };
+
   render() {
     const { onRouteChange } = this.props;
+    const { inputType, error } = this.state;
 
     return (
       <Container component="main" maxWidth="xs" className="form">
@@ -95,15 +124,27 @@ class SignIn extends React.Component {
               fullWidth
               name="password"
               label="Password"
-              type="password"
+              type={inputType}
               id="password"
               autoComplete="current-password"
               onChange={this.onPasswordChange}
             />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
+
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    value="Show Password"
+                    color="primary"
+                    onChange={(e) => this.showPassword(e.target.checked)}
+                  />
+                }
+                label="Show Password"
+              />
+            </div>
+            {error && (
+              <div className="error__msg">Enter correct password & email</div>
+            )}
             <Button
               type="submit"
               fullWidth

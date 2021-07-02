@@ -11,6 +11,19 @@
     height: 100%;
 }
 
+.error__msg {
+    display: flex;
+    justify-content: center;
+    margin-top: 1.8rem;
+    font-size: 1rem;
+    background-color: rgba(255, 0, 0, 0.7);
+    width: 70%;
+    margin: 1.8rem 15% 0 15%;
+    color: #FFF;
+    border-radius: 0.25rem;
+    padding: 0.25rem;
+}
+
 .form {
     padding: 0 0 1rem 0;
     box-shadow: 4px 4px 8px 0px rgba(0, 0, 0, 0.2);

@@ -8,6 +8,7 @@ import Box from "@material-ui/core/Box";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
+import "../scss/Register.scss";
 
 function Copyright() {
   return (
@@ -29,6 +30,7 @@ class Register extends React.Component {
       registerEmail: "",
       registerPassword: "",
       registerName: "",
+      passwordLength: false,
     };
   }
 
@@ -48,6 +50,8 @@ class Register extends React.Component {
   onSubmitRegister = (e) => {
     e.preventDefault();
 
+    const { registerPassword } = this.state;
+
     fetch("http://localhost:5000/register", {
       method: "post",
       headers: { "Content-Type": "application/json" },
@@ -55,18 +59,33 @@ class Register extends React.Component {
         email: this.state.registerEmail,
         password: this.state.registerPassword,
         name: this.state.registerName,
+        error: false,
       }),
     })
       .then((res) => res.json())
       .then((user) => {
-        if (user) {
+        console.log(`user`, user);
+        if (user.status === 200) {
           this.props.loadUser(user);
-          this.props.onRouteChange("home");
+          this.props.onRouteChange("signIn");
+        } else if (registerPassword.length < 8) {
+          this.setState({
+            passwordLength: true,
+          });
+        } else {
+          this.setState({
+            error: true,
+          });
+
+          setTimeout(() => {
+            this.setState({ error: false });
+          }, 3000);
         }
       });
   };
 
   render() {
+    const { error, registerPassword, passwordLength } = this.state;
     return (
       <Container component="main" maxWidth="xs" className="form">
         <CssBaseline />
@@ -112,8 +131,17 @@ class Register extends React.Component {
               type="password"
               id="password"
               autoComplete="current-password"
+              value={registerPassword}
               onChange={this.onPasswordChange}
             />
+            {passwordLength && (
+              <div className="register__password__error">
+                Password has to have atleast 8 characters
+              </div>
+            )}
+            {error && (
+              <div className="error__msg">This email is already in use</div>
+            )}
 
             <Button
               type="submit"

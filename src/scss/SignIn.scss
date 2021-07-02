@@ -1,3 +1,16 @@
 .singIn__registerLink:hover {
     cursor: pointer;
 }
+
+.error_msg {
+    display: flex;
+    justify-content: center;
+    margin-top: 1.8rem;
+    font-size: 1.1rem;
+    background-color: rgba(255, 0, 0, 0.7);
+    width: 70%;
+    margin: 1.8rem 15% 0 15%;
+    color: #FFF;
+    border-radius: 0.25rem;
+    padding: 0.25rem;
+}
