@@ -52,36 +52,36 @@ class Register extends React.Component {
 
     const { registerPassword } = this.state;
 
-    fetch("http://localhost:5000/register", {
-      method: "post",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: this.state.registerEmail,
-        password: this.state.registerPassword,
-        name: this.state.registerName,
-        error: false,
-      }),
-    })
-      .then((res) => res.json())
-      .then((user) => {
-        console.log(`user`, user);
-        if (user.status === 200) {
-          this.props.loadUser(user);
-          this.props.onRouteChange("signIn");
-        } else if (registerPassword.length < 8) {
-          this.setState({
-            passwordLength: true,
-          });
-        } else {
-          this.setState({
-            error: true,
-          });
-
-          setTimeout(() => {
-            this.setState({ error: false });
-          }, 3000);
-        }
+    if (registerPassword.length < 8) {
+      this.setState({
+        passwordLength: true,
       });
+    } else {
+      fetch("http://localhost:5000/register", {
+        method: "post",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: this.state.registerEmail,
+          password: this.state.registerPassword,
+          name: this.state.registerName,
+        }),
+      })
+        .then((res) => res.json())
+        .then((user) => {
+          if (user.status === 200) {
+            this.props.loadUser(user);
+            this.props.onRouteChange("signIn");
+          } else {
+            this.setState({
+              error: true,
+            });
+
+            setTimeout(() => {
+              this.setState({ error: false });
+            }, 3000);
+          }
+        });
+    }
   };
 
   render() {
