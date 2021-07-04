@@ -23,7 +23,7 @@ const option = {
 };
 
 const app = new Clarifai.App({
-  apiKey: "439b8db36d6e4a888c7973b4ff2ce201",
+  apiKey: "",
 });
 
 class App extends Component {
